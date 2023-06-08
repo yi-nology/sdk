@@ -10,11 +10,11 @@ type User struct {
 }
 
 type Resp struct {
-	Code int64  `json:"code"`
-	Msg  string `json:"msg"`
-	Data Data   `json:"data"`
+	Code int64       `json:"code"`
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data"`
 }
 
-type Data struct {
+type DataDetail struct {
 	User User `json:"user"`
 }

@@ -2,6 +2,7 @@ package usercenter
 
 import (
 	"context"
+	"errors"
 	"github.com/imroc/req/v3"
 	"sync"
 )
@@ -24,9 +25,17 @@ func NewUserCenter(baseUrl, detailUri string) *UserCenter {
 	return uc
 }
 
-func (uc *UserCenter) Detail(ctx context.Context, token string) (u *Resp, err error) {
-	if err := uc.c.Post(uc.detailUri).SetBearerAuthToken(token).Do().Into(&u); err != nil {
+func (uc *UserCenter) Detail(ctx context.Context, token string) (u *User, err error) {
+	resp := Resp{}
+	if err := uc.c.Post(uc.detailUri).SetBearerAuthToken(token).Do().Into(&resp); err != nil {
 		return nil, err
 	}
-	return u, nil
+	if resp.Code != 0 {
+		return nil, errors.New(resp.Msg)
+	}
+	detail, ok := resp.Data.(DataDetail)
+	if !ok {
+		return nil, errors.New("invalid data")
+	}
+	return &detail.User, nil
 }
