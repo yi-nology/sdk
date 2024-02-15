@@ -11,7 +11,7 @@ import (
 
 var (
 	// ApolloConfig apollo配置
-	ApolloConfig agollo.Client
+	Apollo agollo.Client
 	// MysqlConfig mysql配置
 	MysqlClient *gorm.DB
 	// RedisConfig redis配置
@@ -26,7 +26,7 @@ type Config struct {
 }
 
 func (i *Config) Init() (err error) {
-	ApolloConfig, err = i.Apollo.InitApollo()
+	Apollo, err = i.Apollo.InitApollo()
 	if err != nil {
 		return err
 	}
