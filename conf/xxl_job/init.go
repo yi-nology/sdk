@@ -1,7 +1,6 @@
 package xxl_job
 
 import (
-	"github.com/go-basic/ipv4"
 	"github.com/xxl-job/xxl-job-executor-go"
 )
 
@@ -9,17 +8,18 @@ func (x XXLJob) Init() xxl.Executor {
 	if x.Enable == false {
 		return nil
 	}
-	if x.ExecutorIp == "" {
-		x.ExecutorIp = ipv4.LocalIP()
+	option := []xxl.Option{xxl.ServerAddr(x.ServerAddr), xxl.RegistryKey(x.RegistryKey)}
+	if x.ExecutorIp != "" {
+		option = append(option, xxl.ExecutorIp(x.ExecutorIp))
+	}
+	if x.AccessToken != "" {
+		option = append(option, xxl.AccessToken(x.AccessToken))
+	}
+	if x.ExecutorPort != "" {
+		option = append(option, xxl.ExecutorPort(x.ExecutorPort))
 	}
 
-	exec := xxl.NewExecutor(
-		xxl.ServerAddr(x.ServerAddr),     //请求地址(默认为空)
-		xxl.AccessToken(x.AccessToken),   //请求令牌(默认为空)
-		xxl.ExecutorPort(x.ExecutorPort), //默认9999（非必填）
-		xxl.RegistryKey(x.RegistryKey),   //执行器名称
-		xxl.ExecutorIp(x.ExecutorIp),     //本地IP（默认为空，可自动获取）
-	)
+	exec := xxl.NewExecutor(option...)
 	exec.Init()
 	return exec
 }
