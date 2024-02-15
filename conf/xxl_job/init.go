@@ -12,8 +12,8 @@ func (x XXLJob) Init() xxl.Executor {
 	if x.ExecutorIp != "" {
 		option = append(option, xxl.ExecutorIp(x.ExecutorIp))
 	}
-	if x.AccessToken != "" {
-		option = append(option, xxl.AccessToken(x.AccessToken))
+	if x.Access != "" {
+		option = append(option, xxl.AccessToken(x.Access))
 	}
 	if x.ExecutorPort != "" {
 		option = append(option, xxl.ExecutorPort(x.ExecutorPort))
