@@ -13,7 +13,7 @@ var (
 	// ApolloConfig apollo配置
 	ApolloConfig agollo.Client
 	// MysqlConfig mysql配置
-	MysqlConfig *gorm.DB
+	MysqlClient *gorm.DB
 	// RedisConfig redis配置
 	RedisClient *redis.Client
 )
@@ -30,7 +30,7 @@ func (i *Config) Init() (err error) {
 	if err != nil {
 		return err
 	}
-	MysqlConfig, err = i.Mysql.Init()
+	MysqlClient, err = i.Mysql.Init()
 	if err != nil {
 		return err
 	}
