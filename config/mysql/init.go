@@ -6,6 +6,9 @@ import (
 )
 
 func (m Mysql) Init() (*gorm.DB, error) {
+	if m.Enable == false {
+		return nil, nil
+	}
 	mysqlConfig := mysql.Config{
 		DSN:                       m.Dsn(), // DSN data source name
 		DefaultStringSize:         191,     // string 类型字段的默认长度

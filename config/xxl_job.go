@@ -1,8 +1,8 @@
 package config
 
 type XXLJob struct {
-	ServerAddr   string `mapstructure:"server-addr" json:"server-addr" yaml:"server-addr"`
-	AccessToken  string `josn:"access-token" yaml:"access-token"`
-	ExecutorIp   string `json:"executor-ip" yaml:"executor-ip"`
-	ExecutorPort int    `json:"executor-port" yaml:"executor-port"`
+	ServerAddr   string `mapstructure:"serverAddr,optional" json:"serverAddr,optional" yaml:"serverAddr"`
+	AccessToken  string `josn:"accessToken,optional" yaml:"accessToken"`
+	ExecutorIp   string `json:"executorIp,optional" yaml:"executorIp"`
+	ExecutorPort int    `json:"executorPort,optional" yaml:"executorPort"`
 }

@@ -7,6 +7,9 @@ import (
 )
 
 func (r Redis) Init() (*redis.Client, error) {
+	if r.Enable == false {
+		return nil, nil
+	}
 	client := redis.NewClient(&redis.Options{
 		Addr:     r.Addr,
 		Password: r.Password, // no password set

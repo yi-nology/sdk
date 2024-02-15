@@ -7,7 +7,9 @@ import (
 )
 
 func (a Apollo) InitApollo() (*agollo.Client, error) {
-
+	if a.Enable == false {
+		return nil, nil
+	}
 	var c = &config.AppConfig{
 		AppID:          a.AppID,
 		Cluster:        a.Cluster,

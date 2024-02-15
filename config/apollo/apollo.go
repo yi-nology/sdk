@@ -1,15 +1,15 @@
 package apollo
 
 type Apollo struct {
-	Enable bool   `json:"enable" yaml:"enable" default:"false"`
-	AppID  string `json:"appId" yaml:"appId" default:""`
+	Enable bool   `json:"enable,optional" yaml:"enable,optional" default:"false"`
+	AppID  string `json:"appId,optional" yaml:"appId,optional" default:""`
 	// Cluster is the cluster name, default is "default".
-	Cluster string `json:"cluster" yaml:"cluster" default:"default"`
+	Cluster string `json:"cluster,optional" yaml:"cluster,optional" default:"default"`
 	// NamespaceName is the namespace name, default is "application".
-	NamespaceName  string `json:"namespaceName" yaml:"namespaceName" default:"application"`
-	Endpoint       string `json:"endpoint" yaml:"endpoint" default:"http://localhost:8080"`
-	Dynamic        bool   `json:"dynamic" yaml:"dynamic" yaml:"dynamic"`
-	Interval       int    `json:"interval" yaml:"interval" default:"30s"`
-	Secret         string `json:"secret" yaml:"secret"`
-	IsBackupConfig bool   `json:"isBackupConfig" yaml:"isBackupConfig" default:"true"`
+	NamespaceName  string `json:"namespaceName,optional" yaml:"namespaceName,optional" default:"application"`
+	Endpoint       string `json:"endpoint,optional" yaml:"endpoint,optional" default:"http://localhost:8080"`
+	Dynamic        bool   `json:"dynamic,optional" yaml:"dynamic,optional" yaml:"dynamic"`
+	Interval       int    `json:"interval,optional" yaml:"interval,optional" default:"30s"`
+	Secret         string `json:"secret,optional" yaml:"secret,optional"`
+	IsBackupConfig bool   `json:"isBackupConfig,optional" yaml:"isBackupConfig,optional" default:"true"`
 }
