@@ -8,6 +8,7 @@ require (
 	github.com/apolloconfig/agollo/v4 v4.3.1
 	github.com/imroc/req/v3 v3.42.3
 	github.com/redis/go-redis/v9 v9.4.0
+	github.com/xxl-job/xxl-job-executor-go v1.2.0
 	gorm.io/driver/mysql v1.5.4
 	gorm.io/gorm v1.25.7
 )
@@ -18,6 +19,7 @@ require (
 	github.com/cloudflare/circl v1.3.7 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
+	github.com/go-basic/ipv4 v1.0.0 // indirect
 	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 // indirect
 	github.com/google/pprof v0.0.0-20240207164012-fb44976bdcd5 // indirect

@@ -3,9 +3,11 @@ package conf
 import (
 	"github.com/apolloconfig/agollo/v4"
 	"github.com/redis/go-redis/v9"
+	"github.com/xxl-job/xxl-job-executor-go"
 	"github.com/yi-nology/sdk/conf/apollo"
 	"github.com/yi-nology/sdk/conf/mysql"
 	redisConf "github.com/yi-nology/sdk/conf/redis"
+	"github.com/yi-nology/sdk/conf/xxl_job"
 	"gorm.io/gorm"
 )
 
@@ -16,13 +18,15 @@ var (
 	MysqlClient *gorm.DB
 	// RedisConfig redis配置
 	RedisClient *redis.Client
+	// XXLJobConfig xxl-job配置
+	XXLJobClient xxl.Executor
 )
 
 type Config struct {
 	Apollo apollo.Apollo   `mapstructure:"apollo" json:"apollo" yaml:"apollo"`
 	Mysql  mysql.Mysql     `mapstructure:"mysql" json:"mysql" yaml:"mysql"`
 	Redis  redisConf.Redis `mapstructure:"redis" json:"redis" yaml:"redis"`
-	XXLJob XXLJob          `mapstructure:"xxl-job" json:"xxl-job" yaml:"xxl-job"`
+	XXLJob xxl_job.XXLJob  `mapstructure:"xxlJob" json:"xxlJob" yaml:"xxlJob"`
 }
 
 func (i *Config) Init() (err error) {
@@ -38,5 +42,6 @@ func (i *Config) Init() (err error) {
 	if err != nil {
 		return err
 	}
+	XXLJobClient = i.XXLJob.Init()
 	return nil
 }
