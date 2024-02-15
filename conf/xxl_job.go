@@ -1,4 +1,4 @@
-package config
+package conf
 
 type XXLJob struct {
 	ServerAddr   string `mapstructure:"serverAddr,optional" json:"serverAddr,optional" yaml:"serverAddr"`

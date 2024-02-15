@@ -6,7 +6,7 @@ import (
 	"github.com/apolloconfig/agollo/v4/env/config"
 )
 
-func (a Apollo) InitApollo() (*agollo.Client, error) {
+func (a Apollo) InitApollo() (agollo.Client, error) {
 	if a.Enable == false {
 		return nil, nil
 	}
@@ -25,5 +25,5 @@ func (a Apollo) InitApollo() (*agollo.Client, error) {
 		return nil, err
 	}
 	fmt.Println("初始化Apollo配置成功")
-	return &client, err
+	return client, err
 }

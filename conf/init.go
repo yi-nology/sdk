@@ -1,17 +1,17 @@
-package config
+package conf
 
 import (
 	"github.com/apolloconfig/agollo/v4"
 	"github.com/redis/go-redis/v9"
-	"github.com/yi-nology/sdk/config/apollo"
-	"github.com/yi-nology/sdk/config/mysql"
-	redisConf "github.com/yi-nology/sdk/config/redis"
+	"github.com/yi-nology/sdk/conf/apollo"
+	"github.com/yi-nology/sdk/conf/mysql"
+	redisConf "github.com/yi-nology/sdk/conf/redis"
 	"gorm.io/gorm"
 )
 
 var (
 	// ApolloConfig apollo配置
-	ApolloConfig *agollo.Client
+	ApolloConfig agollo.Client
 	// MysqlConfig mysql配置
 	MysqlConfig *gorm.DB
 	// RedisConfig redis配置
