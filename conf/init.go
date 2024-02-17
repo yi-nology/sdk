@@ -20,6 +20,8 @@ var (
 	RedisClient *redis.Client
 	// XXLJobConfig xxl-job配置
 	XXLJobClient xxl.Executor
+
+	GloablConfig *Config
 )
 
 type Config struct {
@@ -43,5 +45,6 @@ func (i *Config) Init() (err error) {
 		return err
 	}
 	XXLJobClient = i.XXLJob.Init()
+	GloablConfig = i
 	return nil
 }
