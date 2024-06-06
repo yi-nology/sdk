@@ -16,5 +16,20 @@ func (m Mysql) Init() (*gorm.DB, error) {
 
 	}
 	db, err := gorm.Open(mysql.New(mysqlConfig))
+	if err != nil {
+		return nil, err
+	}
+	// 设置连接池
+	sqlDB, err := db.DB()
+	if err != nil {
+		return nil, err
+	}
+	sqlDB.SetMaxIdleConns(m.MaxIdleConns)
+	sqlDB.SetMaxOpenConns(m.MaxOpenConns)
+
+	if err = sqlDB.Ping(); err != nil {
+		return nil, err
+	}
+
 	return db, err
 }
