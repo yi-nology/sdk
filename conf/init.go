@@ -29,11 +29,11 @@ var (
 )
 
 type Config struct {
-	Apollo apollo.Apollo   `mapstructure:"apollo" json:"apollo" yaml:"apollo"`
-	Mysql  mysql.Mysql     `mapstructure:"mysql" json:"mysql" yaml:"mysql"`
-	Redis  redisConf.Redis `mapstructure:"redis" json:"redis" yaml:"redis"`
-	XXLJob xxl_job.XXLJob  `mapstructure:"xxlJob" json:"xxlJob" yaml:"xxlJob"`
-	Mongo  mongo.Mongo     `mapstructure:"mongo" json:"mongo" yaml:"mongo"`
+	Apollo apollo.Apollo   `mapstructure:"apollo,optional" json:"apollo,optional" yaml:"apollo,optional"`
+	Mysql  mysql.Mysql     `mapstructure:"mysql,optional" json:"mysql,optional" yaml:"mysql,optional"`
+	Redis  redisConf.Redis `mapstructure:"redis,optional" json:"redis,optional" yaml:"redis,optional"`
+	XXLJob xxl_job.XXLJob  `mapstructure:"xxlJob,optional" json:"xxlJob,optional" yaml:"xxlJob,optional"`
+	Mongo  mongo.Mongo     `mapstructure:"mongo,optional" json:"mongo,optional" yaml:"mongo,optional"`
 }
 
 func (i *Config) Init() (err error) {

@@ -1,0 +1,36 @@
+mysql:
+  enable: true
+  prefix: ""
+  port: "3306"
+  config: charset=utf8mb4&parseTime=True&loc=Local
+  db-name: zz
+  username: zz
+  password: zz
+  path: 0.0.0.0
+  engine: ""
+  log-mode: error
+  max-idle-conns: 10
+  max-open-conns: 100
+  singular: false
+  log-zap: false
+redis:
+  enable: true
+  addr: 0.0.0.0:6379
+  password: zzzzzz
+  db: 0
+apollo:
+  enable: true
+  appId: ww
+  cluster: DEV
+  namespaceName: application
+  endpoint: http://0.0.0.0:8080/
+  secret: qwertyuiop
+  dynamic: true
+  interval: 5
+  isBackupConfig: true
+xxlJob:
+  enable: false
+  serverAddr: http://0.0.0.0:8081/xxl-job-admin
+  executorPort: '18888'
+  registryKey: wwww
+  token: default_token
