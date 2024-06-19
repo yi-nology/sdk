@@ -12,4 +12,5 @@ type Apollo struct {
 	Interval       int    `json:"interval,optional" yaml:"interval,optional" default:"30s"`
 	Secret         string `json:"secret,optional" yaml:"secret,optional"`
 	IsBackupConfig bool   `json:"isBackupConfig,optional" yaml:"isBackupConfig,optional" default:"true"`
+	MustStart      bool   `json:"mustStart,optional" yaml:"mustStart,optional" default:"false"`
 }

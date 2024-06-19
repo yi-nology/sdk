@@ -11,12 +11,14 @@ func (a Apollo) InitApollo() (agollo.Client, error) {
 		return nil, nil
 	}
 	var c = &config.AppConfig{
-		AppID:          a.AppID,
-		Cluster:        a.Cluster,
-		IP:             a.Endpoint,
-		NamespaceName:  a.NamespaceName,
-		IsBackupConfig: true,
-		Secret:         a.Secret,
+		AppID:             a.AppID,
+		Cluster:           a.Cluster,
+		IP:                a.Endpoint,
+		NamespaceName:     a.NamespaceName,
+		IsBackupConfig:    true,
+		Secret:            a.Secret,
+		SyncServerTimeout: 30,
+		MustStart:         a.MustStart,
 	}
 	client, err := agollo.StartWithConfig(func() (*config.AppConfig, error) {
 		return c, nil
