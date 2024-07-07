@@ -35,10 +35,6 @@ func (m *ResponseMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 			})
 			return
 		}
-		switch rec.statusCode {
-		case 301, 302, 304:
-			return
-		}
 		// 封装原始响应数据
 		var originalData map[string]interface{}
 		if err := json.Unmarshal(rec.body.Bytes(), &originalData); err != nil {
