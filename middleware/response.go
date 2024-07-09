@@ -36,7 +36,7 @@ func (m *ResponseMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 		// 封装原始响应数据
-		var originalData map[string]interface{}
+		var originalData interface{}
 		if err := json.Unmarshal(rec.body.Bytes(), &originalData); err != nil {
 			httpx.OkJson(w, responseWrapper{
 				Code: 1,
