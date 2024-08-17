@@ -35,6 +35,14 @@ func (m *ResponseMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 			})
 			return
 		}
+		if rec.body.Bytes() == nil {
+			httpx.OkJson(w, responseWrapper{
+				Code: 0,
+				Msg:  "成功",
+				Data: nil,
+			})
+			return
+		}
 		// 封装原始响应数据
 		var originalData interface{}
 		if err := json.Unmarshal(rec.body.Bytes(), &originalData); err != nil {
@@ -49,7 +57,7 @@ func (m *ResponseMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 		// 返回封装后的响应数据
 		httpx.OkJson(w, responseWrapper{
 			Code: 0,
-			Msg:  "ok",
+			Msg:  "成功",
 			Data: originalData,
 		})
 	}
