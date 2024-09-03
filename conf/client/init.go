@@ -1,4 +1,4 @@
-package conf
+package client
 
 import (
 	"context"
@@ -17,13 +17,13 @@ var (
 	// ApolloConfig apollo配置
 	Apollo agollo.Client
 	// MysqlConfig mysql配置
-	MysqlClient *gorm.DB
+	Mysql *gorm.DB
 	// RedisConfig redis配置
-	RedisClient *redis.Client
+	Redis *redis.Client
 	// XXLJobConfig xxl-job配置
-	XXLJobClient xxl.Executor
+	XXLJob xxl.Executor
 	// MongoClient mongo配置
-	MongoClient *mongo.MongoCli
+	Mongo *mongo.MongoCli
 
 	GloablConfig *Config
 )
@@ -41,19 +41,19 @@ func (i *Config) Init() (err error) {
 	if err != nil {
 		return err
 	}
-	MysqlClient, err = i.Mysql.Init()
+	Mysql, err = i.Mysql.Init()
 	if err != nil {
 		return err
 	}
-	RedisClient, err = i.Redis.Init()
+	Redis, err = i.Redis.Init()
 	if err != nil {
 		return err
 	}
-	MongoClient, err = i.Mongo.Init()
+	Mongo, err = i.Mongo.Init()
 	if err != nil {
 		return err
 	}
-	XXLJobClient = i.XXLJob.Init()
+	XXLJob = i.XXLJob.Init()
 
 	GloablConfig = i
 	return nil
@@ -61,18 +61,17 @@ func (i *Config) Init() (err error) {
 
 func (i *Config) Stop(ctx context.Context) {
 	if i.Mongo.Enable {
-		MongoClient.Close(ctx)
+		Mongo.Close(ctx)
 	}
 	if i.Mysql.Enable {
-
 	}
 	if i.Redis.Enable {
-		RedisClient.Close()
+		Redis.Close()
 	}
 	if i.Apollo.Enable {
 		Apollo.Close()
 	}
 	if i.XXLJob.Enable {
-		XXLJobClient.Stop()
+		XXLJob.Stop()
 	}
 }
