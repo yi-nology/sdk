@@ -1,15 +1,18 @@
-package client
+package baggage
 
 import (
 	"context"
 	"github.com/apolloconfig/agollo/v4"
+	"github.com/yi-nology/sdk/baggage/conf/mysql"
+
 	"github.com/redis/go-redis/v9"
 	"github.com/xxl-job/xxl-job-executor-go"
-	"github.com/yi-nology/sdk/conf/apollo"
-	"github.com/yi-nology/sdk/conf/mongo"
-	"github.com/yi-nology/sdk/conf/mysql"
-	redisConf "github.com/yi-nology/sdk/conf/redis"
-	"github.com/yi-nology/sdk/conf/xxl_job"
+	"github.com/yi-nology/sdk/baggage/conf/apollo"
+	"github.com/yi-nology/sdk/baggage/conf/mongo"
+	"github.com/yi-nology/sdk/baggage/conf/xxl_job"
+
+	redisConf "github.com/yi-nology/sdk/baggage/conf/redis"
+
 	"gorm.io/gorm"
 )
 
