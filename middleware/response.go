@@ -24,10 +24,11 @@ func NewResponseMiddleware() *ResponseMiddleware {
 func (m *ResponseMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// 创建一个新的响应记录器
-		rec := &ResponseRecorder{ResponseWriter: w, statusCode: http.StatusOK}
+		rec := &responseRecorder{ResponseWriter: w, statusCode: http.StatusOK}
 		next(rec, r)
-		r = r.WithContext(context.WithValue(r.Context(), "responseResp", rec))
 
+		// 将数据存入请求上下文
+		rec.setCtx(r)
 		// 检查响应状态码，如果是错误码则返回失败信息
 		if rec.statusCode >= 400 {
 			httpx.OkJson(w, responseWrapper{
@@ -60,27 +61,27 @@ func (m *ResponseMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-type ResponseRecorder struct {
+type responseRecorder struct {
 	http.ResponseWriter
 	statusCode int
 	body       bytes.Buffer
 }
 
-func (rec *ResponseRecorder) WriteHeader(code int) {
+func (rec *responseRecorder) WriteHeader(code int) {
 	rec.statusCode = code
 }
 
-func (rec *ResponseRecorder) Write(body []byte) (int, error) {
+func (rec *responseRecorder) Write(body []byte) (int, error) {
 	rec.body.Write(body)
 	return len(body), nil
 }
 
-func (rec *ResponseRecorder) SetCtx(r *http.Request) {
+func (rec *responseRecorder) setCtx(r *http.Request) {
 	r = r.WithContext(context.WithValue(r.Context(), "responseInfo", rec))
 }
 
 func GetResponse(r *http.Request) (int, bytes.Buffer) {
-	info, ok := r.Context().Value("responseInfo").(*ResponseRecorder)
+	info, ok := r.Context().Value("responseInfo").(*responseRecorder)
 	if !ok {
 		return 0, bytes.Buffer{}
 	}
