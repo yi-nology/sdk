@@ -2,9 +2,9 @@ package middleware
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"github.com/zeromicro/go-zero/rest/httpx"
+	"io"
 	"net/http"
 )
 
@@ -26,9 +26,22 @@ func (m *ResponseMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 		// 创建一个新的响应记录器
 		rec := &responseRecorder{ResponseWriter: w, statusCode: http.StatusOK}
 		next(rec, r)
+		r.Response = &http.Response{
 
+			StatusCode:       rec.statusCode,
+			Proto:            r.Proto,
+			ProtoMajor:       r.ProtoMajor,
+			ProtoMinor:       r.ProtoMinor,
+			Header:           r.Header,
+			Body:             io.NopCloser(bytes.NewReader(rec.body.Bytes())),
+			ContentLength:    r.ContentLength,
+			TransferEncoding: r.TransferEncoding,
+			Close:            r.Close,
+			Trailer:          r.Trailer,
+			Request:          r,
+			TLS:              r.TLS,
+		}
 		// 将数据存入请求上下文
-		rec.setCtx(r)
 		// 检查响应状态码，如果是错误码则返回失败信息
 		if rec.statusCode >= 400 {
 			httpx.OkJson(w, responseWrapper{
@@ -74,16 +87,4 @@ func (rec *responseRecorder) WriteHeader(code int) {
 func (rec *responseRecorder) Write(body []byte) (int, error) {
 	rec.body.Write(body)
 	return len(body), nil
-}
-
-func (rec *responseRecorder) setCtx(r *http.Request) {
-	r = r.WithContext(context.WithValue(r.Context(), "responseInfo", rec))
-}
-
-func GetResponse(r *http.Request) (int, bytes.Buffer) {
-	info, ok := r.Context().Value("responseInfo").(*responseRecorder)
-	if !ok {
-		return 0, bytes.Buffer{}
-	}
-	return info.statusCode, info.body
 }
