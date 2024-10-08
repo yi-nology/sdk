@@ -27,11 +27,13 @@ func (m *ResponseWithLogMiddleware) Handle(next http.HandlerFunc) http.HandlerFu
 		rec := &responseRecorder{ResponseWriter: w, statusCode: http.StatusOK}
 		next(rec, r)
 		logx.WithContext(r.Context()).
-			Infof("请求 Method：%s, Url：%s, Header：%+v,From:%+v, Body：%+v; 		返回值信息Header：%+v,code:%+v,data：%+v",
+			Infof("Method：%s, Url：%s, Header：%+v, From:%+v, Body：%+v; \ncode:%+v,data：%s",
 				r.Method, r.URL, r.Header, r.Form, r.Body, rec.statusCode, rec.body.String())
 
 		// 检查响应状态码，如果是错误码则返回失败信息
 		if rec.statusCode >= 400 {
+			logx.WithContext(r.Context()).Errorf("Method：%s, Url：%s, Header：%+v, From:%+v, Body：%+v; \ncode:%+v,data：%s",
+				r.Method, r.URL, r.Header, r.Form, r.Body, rec.statusCode, rec.body.String())
 			httpx.OkJson(w, responseWrapper{
 				Code: 1,
 				Msg:  rec.body.String(),
