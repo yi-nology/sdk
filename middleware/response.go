@@ -3,8 +3,8 @@ package middleware
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
-	"io"
 	"net/http"
 )
 
@@ -14,34 +14,22 @@ type responseWrapper struct {
 	Data interface{} `json:"data"`
 }
 
-type ResponseMiddleware struct {
+type ResponseWithLogMiddleware struct {
 }
 
-func NewResponseMiddleware() *ResponseMiddleware {
-	return &ResponseMiddleware{}
+func NewResponseMiddleware() *ResponseWithLogMiddleware {
+	return &ResponseWithLogMiddleware{}
 }
 
-func (m *ResponseMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
+func (m *ResponseWithLogMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// 创建一个新的响应记录器
 		rec := &responseRecorder{ResponseWriter: w, statusCode: http.StatusOK}
 		next(rec, r)
-		r.Response = &http.Response{
+		logx.WithContext(r.Context()).
+			Infof("请求 Method：%s, Url：%s, Header：%+v,From:%+v, Body：%+v; 		返回值信息Header：%+v,code:%+v,data：%+v",
+				r.Method, r.URL, r.Header, r.Form, r.Body, rec.statusCode, rec.body.String())
 
-			StatusCode:       rec.statusCode,
-			Proto:            r.Proto,
-			ProtoMajor:       r.ProtoMajor,
-			ProtoMinor:       r.ProtoMinor,
-			Header:           r.Header,
-			Body:             io.NopCloser(bytes.NewReader(rec.body.Bytes())),
-			ContentLength:    r.ContentLength,
-			TransferEncoding: r.TransferEncoding,
-			Close:            r.Close,
-			Trailer:          r.Trailer,
-			Request:          r,
-			TLS:              r.TLS,
-		}
-		// 将数据存入请求上下文
 		// 检查响应状态码，如果是错误码则返回失败信息
 		if rec.statusCode >= 400 {
 			httpx.OkJson(w, responseWrapper{
