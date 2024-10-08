@@ -79,10 +79,10 @@ func (rec *ResponseRecorder) SetCtx(r *http.Request) {
 	r = r.WithContext(context.WithValue(r.Context(), "responseInfo", rec))
 }
 
-func GetResponse(r *http.Request) *ResponseRecorder {
+func GetResponse(r *http.Request) (int, bytes.Buffer) {
 	info, ok := r.Context().Value("responseInfo").(*ResponseRecorder)
 	if !ok {
-		return nil
+		return 0, bytes.Buffer{}
 	}
-	return info
+	return info.statusCode, info.body
 }
