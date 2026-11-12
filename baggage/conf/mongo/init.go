@@ -73,6 +73,36 @@ func (m *MongoCli) Indexes(ctx context.Context) error {
 	return nil
 }
 
+// parseIndexKeys 解析一组索引键定义。
+// 键名约定与 qmgo 一致：带 "-" 前缀表示降序，否则升序。
+// 返回：
+//   - spec：传给 qmgo IndexModel.Key 的键列表（保留 "-" 前缀语义，
+//     由 qmgo SplitSortField 转成「字段 → 方向」后交给 mongo-driver）；
+//   - name：与 mongo 默认索引命名一致的规范名（field1_1_field2_-1 形式），
+//     供去重与已有索引名比对使用，字段名中的降序标记不参与拼接。
+func parseIndexKeys(keys []string) (spec []string, name string, err error) {
+	if len(keys) == 0 {
+		return nil, "", errors.New("索引定义不能为空")
+	}
+	spec = make([]string, 0, len(keys))
+	nameParts := make([]string, 0, 2*len(keys))
+	for _, k := range keys {
+		field, dir := k, "1"
+		if strings.HasPrefix(k, "-") {
+			field, dir = strings.TrimPrefix(k, "-"), "-1"
+			if field == "" {
+				return nil, "", fmt.Errorf("索引键[%s]缺少字段名", k)
+			}
+		}
+		if field == "" {
+			return nil, "", errors.New("索引键不能为空字符串")
+		}
+		spec = append(spec, k)
+		nameParts = append(nameParts, field, dir)
+	}
+	return spec, strings.Join(nameParts, "_"), nil
+}
+
 func (m *MongoCli) CreateIndexes(ctx context.Context, name string, indexes [][]string) error {
 	collection, err := m.Database.Collection(name).CloneCollection()
 	if err != nil {
@@ -91,21 +121,14 @@ func (m *MongoCli) CreateIndexes(ctx context.Context, name string, indexes [][]s
 	indexMap1 := make(map[string][]string, length)
 	for i := 0; i < length; i++ {
 		sort.Strings(indexes[i]) // 对索引key进行排序, 在使用bson.M搜索时, bson会自动按照key的字母顺序进行排序
-		length1 := len(indexes[i])
-		keys := make([]string, 0, length1)
-		for j := 0; j < length1; j++ {
-			if indexes[i][i][0] == '-' {
-				keys = append(keys, indexes[i][j], "-1")
-				continue
-			}
-			keys = append(keys, indexes[i][j], "1")
+		spec, key, err := parseIndexKeys(indexes[i])
+		if err != nil {
+			return errors.Wrapf(err, "解析第%d个索引定义失败!", i)
 		}
-		key := strings.Join(keys, "_")
-		_, o1 := indexMap1[key]
-		if o1 {
+		if _, dup := indexMap1[key]; dup {
 			return errors.Errorf("索引[%s]重复!", key)
 		}
-		indexMap1[key] = indexes[i]
+		indexMap1[key] = spec
 	}
 	length = len(entities)
 	indexMap2 := make(map[string]map[string]string, length)
@@ -130,7 +153,7 @@ func (m *MongoCli) CreateIndexes(ctx context.Context, name string, indexes [][]s
 		if o2 {
 			continue
 		} // 索引存在
-		if len(fmt.Sprintf("%s.%s.$%s", collection.Name(), name, v1)) > 127 {
+		if len(fmt.Sprintf("%s.%s.$%s", collection.Name(), name, k1)) > 127 {
 			err = m.Database.Collection(name).CreateOneIndex(ctx, options.IndexModel{
 				Key:          v1,
 				IndexOptions: option.Index().SetName(xhash.Md5Hex([]byte(k1))),
